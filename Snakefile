@@ -1,11 +1,23 @@
 configfile: "config.yaml"
 
+rule all:
+    input:
+        "plots/quals.svg"
+
 rule get_data:
+    output:
+        'v5.4.5.tar.gz'
     shell:
         'wget -c https://github.com/snakemake/snakemake-tutorial-data/archive/v5.4.5.tar.gz'
+
 rule unpack:
-   shell:
-        'tar -xf v5.4.5.tar.gz data environment.yaml'
+    input:
+        'v5.4.5.tar.gz'
+    output:
+        data=directory('data'),
+        env='environment.yaml'
+    shell:
+        'tar --wildcards -xf {input} --strip 1 "*/{output.data}" "*/{output.env}"'
 
 rule bwa_map:
     input:
@@ -16,6 +28,7 @@ rule bwa_map:
     shell:
         "bwa mem {input} | samtools view -Sb - > {output}"
 
+
 rule samtools_sort:
     input:
         "mapped_reads/{sample}.bam"
@@ -25,6 +38,7 @@ rule samtools_sort:
         "samtools sort -T sorted_reads/{wildcards.sample} "
         "-O bam {input} > {output}"
 
+
 rule samtools_index:
     input:
         "sorted_reads/{sample}.bam"
@@ -32,6 +46,7 @@ rule samtools_index:
         "sorted_reads/{sample}.bam.bai"
     shell:
         "samtools index {input}"
+
 
 rule bcftools_call:
     input:
@@ -43,6 +58,7 @@ rule bcftools_call:
     shell:
         "samtools mpileup -g -f {input.fa} {input.bam} | "
         "bcftools call -mv - > {output}"
+
 
 rule plot_quals:
     input:
