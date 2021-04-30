@@ -2,8 +2,10 @@ configfile: "config.yaml"
 
 rule get_data:
     shell:
-        "wget https://github.com/snakemake/snakemake-tutorial-data/archive/v5.4.5.tar.gz"
-        'tar --wildcards -xf v5.24.1.tar.gz --strip 1 "*/data" "*/environment.yaml"'
+        'wget -c https://github.com/snakemake/snakemake-tutorial-data/archive/v5.4.5.tar.gz'
+rule unpack:
+   shell:
+        'tar -xf v5.4.5.tar.gz data environment.yaml'
 
 rule bwa_map:
     input:
