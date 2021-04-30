@@ -1,0 +1,3 @@
+NameError in line 30 of /media/emilija/HDD/Transcriptomics/snakemake_transcriptomics/Snakefile:
+name 'SAMPLES' is not defined
+  File "/media/emilija/HDD/Transcriptomics/snakemake_transcriptomics/Snakefile", line 30, in <module>
